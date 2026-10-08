@@ -29,4 +29,4 @@ site changes factory (`afnor`), not its code.
 [Documentation](docs/index.md): the options, the message, the store, what was verified - an invoice
 sent for real to a local SMTP server, on 2026-10-08.
 
-License: LGPL-3.0-or-later.
+License: MIT since 2026-10-09; earlier versions remain published under LGPL-3.0-or-later.
