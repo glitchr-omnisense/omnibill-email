@@ -11,7 +11,7 @@ order: 1
 composer require omnibill/email
 ```
 
-PHP 8.2 or later, `glitchr/omnibill` and `symfony/mailer` (a library: any transport it knows -
+PHP 8.2 or later, `omniscient/omnibill` and `symfony/mailer` (a library: any transport it knows -
 SMTP, an API's DSN).
 
 ```php
