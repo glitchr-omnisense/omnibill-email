@@ -1,6 +1,6 @@
 # omnibill/email
 
-**The invoice by e-mail** for [omniscient/omnibill](https://github.com/glitchr-studio/omnibill): the
+**The invoice by e-mail** for [omnisense/omnibill](https://github.com/glitchr-omnisense/omnibill): the
 file attached to a message to the buyer, sent through the application's `symfony/mailer`, its
 statuses - sent, paid, refused - kept by hand. No platform, no account: the default gateway, and
 the one the tests use.

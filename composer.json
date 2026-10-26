@@ -1,7 +1,7 @@
 {
     "name": "omnibill/email",
     "type": "library",
-    "description": "Omnibill E-mail: the invoice attached to an e-mail sent through symfony/mailer, its statuses (sent, paid, refused...) kept by hand in a store of the application's - the default gateway of omniscient/omnibill, and the tests'; no platform, no approval.",
+    "description": "Omnibill E-mail: the invoice attached to an e-mail sent through symfony/mailer, its statuses (sent, paid, refused...) kept by hand in a store of the application's - the default gateway of omnisense/omnibill, and the tests'; no platform, no approval.",
     "keywords": [
         "invoice",
         "e-invoicing",
@@ -9,7 +9,7 @@
         "mailer",
         "omnibill"
     ],
-    "homepage": "https://github.com/glitchr-studio/omnibill-email",
+    "homepage": "https://github.com/glitchr-omnisense/omnibill-email",
     "license": "MIT",
     "authors": [
         {
@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": ">=8.2",
-        "omniscient/omnibill": "^1.0@dev",
+        "omnisense/omnibill": "^1.0@dev",
         "symfony/mailer": "^6.4|^7.0|^8.0"
     },
     "require-dev": {
