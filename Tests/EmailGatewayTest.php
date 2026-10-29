@@ -89,6 +89,29 @@ final class EmailGatewayTest extends TestCase
         $this->gateway(down: true)->submit(self::invoice());
     }
 
+    /**
+     * A mailer that fails while authenticating: its trace holds the credentials it was sending
+     * (SMTP's AUTH PLAIN), which a log of the chain writes when zend.exception_ignore_args is off.
+     * The previous is a copy of the mailer's exception, class kept, and no trace keeps arguments.
+     */
+    public function testNoPartOfAnUnreachableChainHoldsTheMailersCredentials(): void
+    {
+        $ignoreArgs = ini_set('zend.exception_ignore_args', '0');
+        $secret = base64_encode("\0user\0smtp-password-123");
+        try {
+            (new EmailGatewayFactory(new RefusingMailer(), new InMemoryStatusStore()))->create(['from' => 'a@example.org'])->submit(self::invoice());
+            self::fail('no exception');
+        } catch (UnreachableException $e) {
+            self::assertInstanceOf(TransportException::class, $e->getPrevious());
+            for ($one = $e; null !== $one; $one = $one->getPrevious()) {
+                self::assertStringNotContainsString($secret, $one->getMessage());
+                self::assertStringNotContainsString($secret, print_r($one->getTrace(), true));
+            }
+        } finally {
+            ini_set('zend.exception_ignore_args', false !== $ignoreArgs ? $ignoreArgs : '1');
+        }
+    }
+
     public function testAMailerIsNeededAndTheTemplatesAreTheSites(): void
     {
         $flow = $this->gateway(['subject' => '{seller}: invoice {number}, {total} {currency}', 'body' => 'Dear {buyer}, here is {number}.'])->submit(self::invoice());
@@ -118,5 +141,19 @@ final class Outbox implements MailerInterface
         }
         \assert($message instanceof Email);
         $this->sent[] = $message;
+    }
+}
+
+/** A mailer refused while authenticating, as an SMTP transport is: the command in its trace. */
+final class RefusingMailer implements MailerInterface
+{
+    public function send(RawMessage $message, ?Envelope $envelope = null): void
+    {
+        $this->command('AUTH PLAIN '.base64_encode("\0user\0smtp-password-123"));
+    }
+
+    private function command(string $command): never
+    {
+        throw new TransportException('Expected response code "235" but got code "535", with message "535 5.7.8 Authentication failed".', 535);
     }
 }

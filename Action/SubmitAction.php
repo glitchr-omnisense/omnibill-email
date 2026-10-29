@@ -8,6 +8,7 @@ use Omnibill\Action\ApiAwareTrait;
 use Omnibill\Email\Api;
 use Omnibill\Exception\InvalidConfigException;
 use Omnibill\Exception\UnreachableException;
+use Omnibill\Http\Redaction;
 use Omnibill\Model\Direction;
 use Omnibill\Model\Flow;
 use Omnibill\Model\FlowKind;
@@ -65,7 +66,8 @@ final class SubmitAction implements ActionInterface, ApiAwareInterface
         try {
             $this->api->mailer->send($email);
         } catch (TransportExceptionInterface $e) {
-            throw new UnreachableException('email', 'The mailer could not send the invoice: '.$e->getMessage(), null, $e);
+            // A copy of the mailer's exception, no trace keeping its arguments: an SMTP transport's held the credentials it sent.
+            throw Redaction::withoutArguments(new UnreachableException('email', 'The mailer could not send the invoice: '.Redaction::text($e->getMessage()), null, Redaction::copy($e)));
         }
 
         $now = new \DateTimeImmutable();
