@@ -30,3 +30,8 @@ site changes factory (`afnor`), not its code.
 sent for real to a local SMTP server, on 2026-10-08.
 
 License: MIT since 2026-10-09; earlier versions remain published under LGPL-3.0-or-later.
+
+## Usage policy
+
+No API, no provider terms: `policy.json` declares the limits unknown and no key. The sending limits
+are the mail server's: put them in the gateway's `policy` option (operation `submit`).

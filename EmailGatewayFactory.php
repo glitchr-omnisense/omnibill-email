@@ -10,6 +10,7 @@ use Omnibill\Exception\InvalidConfigException;
 use Omnibill\GatewayFactory;
 use Omnibill\Model\Capabilities;
 use Omnibill\Model\Syntax;
+use Omnisense\Contracts\Policy\UsagePolicy;
 use Symfony\Component\Mailer\MailerInterface;
 
 /**
@@ -32,8 +33,16 @@ use Symfony\Component\Mailer\MailerInterface;
  */
 final class EmailGatewayFactory extends GatewayFactory
 {
+    private static ?UsagePolicy $policy = null;
+
     public function __construct(private readonly ?MailerInterface $mailer = null, private readonly ?StatusStoreInterface $store = null)
     {
+    }
+
+    /** Its usage policy, as policy.json declares it (read once). */
+    public static function usagePolicy(): UsagePolicy
+    {
+        return self::$policy ??= UsagePolicy::fromFile(__DIR__.'/policy.json');
     }
 
     protected function populateConfig(Config $config): void
@@ -46,7 +55,7 @@ final class EmailGatewayFactory extends GatewayFactory
             'bcc' => [],
             'subject' => 'Facture {number}',
             'body' => "Bonjour,\n\nVeuillez trouver ci-joint la facture {number}.\n\nCordialement,\n{seller}",
-            'omnibill.capabilities' => new Capabilities([Syntax::FACTURX, Syntax::UBL, Syntax::CII], approved: false, publicSector: false),
+            'omnibill.capabilities' => new Capabilities([Syntax::FACTURX, Syntax::UBL, Syntax::CII], approved: false, publicSector: false, policy: self::usagePolicy()),
             'omnibill.api' => fn (Config $c) => new Api(
                 $this->mailer ?? throw new InvalidConfigException('The "email" gateway needs a mailer: give the factory a Symfony\Component\Mailer\MailerInterface.'),
                 $this->store ?? new InMemoryStatusStore(),

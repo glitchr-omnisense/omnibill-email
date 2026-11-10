@@ -1,0 +1,25 @@
+{
+    "$schema": "https://github.com/glitchr-omnisense/contracts/blob/1.x/resources/usage-policy.schema.json",
+    "provider": "email",
+    "rateLimits": null,
+    "rights": {
+        "commercial": "unknown",
+        "openSourceRequired": null,
+        "caching": {
+            "permission": "unknown"
+        },
+        "storage": "unknown",
+        "redistribution": "unknown",
+        "attribution": {
+            "required": false
+        }
+    },
+    "requirements": {
+        "key": false
+    },
+    "provenance": {
+        "notes": "No API: the invoice leaves through the application's own mailer (symfony/mailer), so there are no provider terms. The sending limits are the mail server's or the transactional e-mail provider's: a site declares them with the gateway's 'policy' option (operations: submit). Legal for a small company's invoices until it must issue through an approved platform (1 September 2027 for SMEs and micro-companies).",
+        "verifiedAt": "2026-11-10",
+        "declaredBy": "maintainer"
+    }
+}
