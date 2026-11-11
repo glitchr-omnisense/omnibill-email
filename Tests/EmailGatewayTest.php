@@ -28,6 +28,7 @@ final class EmailGatewayTest extends TestCase
     private Outbox $outbox;
     private InMemoryStatusStore $store;
 
+    /** @param array<string, mixed> $options */
     private function gateway(array $options = [], bool $down = false): GatewayInterface
     {
         $this->outbox = new Outbox($down);
@@ -55,7 +56,7 @@ final class EmailGatewayTest extends TestCase
         self::assertSame(['F-2026-042.pdf', 'application/pdf', '%PDF-1.7 Factur-X'], [$attachment->getFilename(), $attachment->getMediaType().'/'.$attachment->getMediaSubtype(), $attachment->getBody()]);
 
         self::assertSame([FlowState::ACCEPTED, LifecycleStatus::SENT, 'F-2026-042', 'order-42'], [$flow->state, $flow->status, $flow->invoiceNumber, $flow->trackingId]);
-        self::assertSame('<'.$flow->reference.'>', $email->getHeaders()->get('Message-ID')->getBodyAsString(), 'the message id names the flow');
+        self::assertSame('<'.$flow->reference.'>', $email->getHeaders()->get('Message-ID')?->getBodyAsString(), 'the message id names the flow');
     }
 
     public function testItsStatusesAreKeptByHand(): void

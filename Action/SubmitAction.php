@@ -45,14 +45,14 @@ final class SubmitAction implements ActionInterface, ApiAwareInterface
     {
         \assert($request instanceof Submit);
         $invoice = $request->invoice;
-        $to = $invoice->buyer?->email ?? throw new InvalidConfigException('The "email" gateway sends an invoice to its buyer\'s e-mail: the Invoice has no buyer, or the buyer no e-mail.');
+        $to = $invoice->buyer->email ?? throw new InvalidConfigException('The "email" gateway sends an invoice to its buyer\'s e-mail: the Invoice has no buyer, or the buyer no e-mail.');
 
-        $values = ['number' => $invoice->number ?? '', 'seller' => $invoice->seller?->name ?? '', 'buyer' => $invoice->buyer?->name ?? '', 'total' => $invoice->total ?? '', 'currency' => $invoice->currency ?? ''];
+        $values = ['number' => $invoice->number ?? '', 'seller' => $invoice->seller->name ?? '', 'buyer' => $invoice->buyer->name ?? '', 'total' => $invoice->total ?? '', 'currency' => $invoice->currency ?? ''];
         $reference = \sprintf('%s@omnibill', bin2hex(random_bytes(16)));
         $email = (new Email())
             ->from($this->api->from)
-            ->to(new Address($to, (string) $invoice->buyer?->name))
-            ->subject(trim(preg_replace('~\s+~', ' ', $this->api->fill($this->api->subject, $values))))
+            ->to(new Address($to, (string) $invoice->buyer->name))
+            ->subject(trim((string) preg_replace('~\s+~', ' ', $this->api->fill($this->api->subject, $values))))
             ->text($this->api->fill($this->api->body, $values))
             ->attach($invoice->content, $invoice->filename, $invoice->syntax->mimeType());
         $email->getHeaders()->addIdHeader('Message-ID', $reference);

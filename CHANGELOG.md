@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- PHPStan at level max with an empty baseline (`phpstan.neon`, `phpstan-baseline.neon`, as the
+  family's harness and CI run it): types only. No behaviour change.
+
 ### Fixed
 
 - An `UnreachableException` for a mailer that failed no longer carries its credentials: its

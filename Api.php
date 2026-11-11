@@ -19,7 +19,11 @@ final class Api
     ) {
     }
 
-    /** The subject or the body with {number}, {seller}, {buyer}, {total}, {currency} filled in. */
+    /**
+     * The subject or the body with {number}, {seller}, {buyer}, {total}, {currency} filled in.
+     *
+     * @param array<string, scalar|null> $values
+     */
     public function fill(string $template, array $values): string
     {
         return strtr($template, array_combine(array_map(static fn (string $k) => '{'.$k.'}', array_keys($values)), array_map('strval', $values)));

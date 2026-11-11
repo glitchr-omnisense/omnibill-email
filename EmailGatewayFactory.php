@@ -59,15 +59,21 @@ final class EmailGatewayFactory extends GatewayFactory
             'omnibill.api' => fn (Config $c) => new Api(
                 $this->mailer ?? throw new InvalidConfigException('The "email" gateway needs a mailer: give the factory a Symfony\Component\Mailer\MailerInterface.'),
                 $this->store ?? new InMemoryStatusStore(),
-                (string) $c['from'],
-                '' !== (string) $c['reply_to'] ? (string) $c['reply_to'] : null,
+                self::text($c['from']),
+                '' !== self::text($c['reply_to']) ? self::text($c['reply_to']) : null,
                 $c->list('bcc'),
-                (string) $c['subject'],
-                (string) $c['body'],
+                self::text($c['subject']),
+                self::text($c['body']),
             ),
             'omnibill.action.submit' => new SubmitAction(),
             'omnibill.action.fetch_status' => new FetchStatusAction(),
             'omnibill.action.set_status' => new SetStatusAction(),
         ]);
+    }
+
+    /** (string) of a scalar or a Stringable, "" for anything else. */
+    private static function text(mixed $value): string
+    {
+        return \is_scalar($value) || $value instanceof \Stringable ? (string) $value : '';
     }
 }
