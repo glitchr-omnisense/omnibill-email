@@ -31,6 +31,14 @@ sent for real to a local SMTP server, on 2026-10-08.
 
 License: MIT since 2026-10-09; earlier versions remain published under LGPL-3.0-or-later.
 
+## Install
+
+```sh
+composer require omnibill/email
+```
+
+It brings the family's core, `omnisense/omnibill`, and `omnisense/contracts` with it. No platform and no account: the invoice leaves through the application's `symfony/mailer` (any `MAILER_DSN`; `null://null` sends nothing, for a first try). It brings `symfony/mailer` too.
+
 ## Usage policy
 
 No API, no provider terms: `policy.json` declares the limits unknown and no key. The sending limits
